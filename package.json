@@ -1,0 +1,55 @@
+{
+  "name": "react-ctrl-form",
+  "type": "module",
+  "version": "0.0.1",
+  "description": "React form management library.",
+  "author": "H <3794hyo@mail.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/3794/react-ctrl-form#readme",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:3794/react-ctrl-form.git"
+  },
+  "bugs": {
+    "url": "https://github.com/3794/react-ctrl-form/issues"
+  },
+  "exports": {
+    ".": "./dist/index.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "play": "vite",
+    "test": "vitest",
+    "typecheck": "tsc --noEmit",
+    "release": "bumpp",
+    "prepublishOnly": "pnpm run build"
+  },
+  "peerDependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "immer": "^11.1.4"
+  },
+  "devDependencies": {
+    "@tsconfig/strictest": "^2.0.8",
+    "@types/node": "^25.5.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.1",
+    "@vitest/browser-playwright": "^4.1.2",
+    "bumpp": "^11.0.1",
+    "immer": "^11.1.4",
+    "tsdown": "^0.21.7",
+    "typescript": "^6.0.2",
+    "vite": "^8.0.3",
+    "vitest": "^4.1.2",
+    "vitest-browser-react": "^2.1.0"
+  }
+}
