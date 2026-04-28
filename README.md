@@ -153,6 +153,81 @@ function LoginForm() {
 }
 ```
 
+## Integrating with UI libraries
+
+Wrap any UI library components with field descriptors.
+
+```tsx
+import {
+  createField,
+  createForm,
+  createFormContext,
+  useField,
+  type FieldDescriptor,
+} from "react-ctrl-form";
+import { Button, Checkbox, Input } from "@mui/material";
+
+type FormValues = {
+  text: string;
+  isChecked: boolean;
+};
+
+const formStore = createForm<FormValues>({
+  text: "",
+  isChecked: false,
+});
+
+const [FormProvider, useFormContext] = createFormContext();
+
+const textField = createField<FormValues>({
+  select: (state) => state.text,
+});
+
+const checkboxField = createField<FormValues>({
+  select: (state) => state.isChecked,
+});
+
+function MuiInput({ field }: { field: FieldDescriptor<string> }) {
+  const store = useFormContext();
+  const { value, setValue } = useField(store, field);
+
+  return (
+    <div>
+      <Input value={value} onChange={(e) => setValue(e.target.value)} />
+    </div>
+  );
+}
+
+function MuiCheckbox({ field }: { field: FieldDescriptor<boolean> }) {
+  const store = useFormContext();
+  const { value, setValue } = useField(store, field);
+
+  return (
+    <Checkbox checked={value} onChange={(e) => setValue(e.target.checked)} />
+  );
+}
+
+export function Form() {
+  const handleSubmit = async (e: React.SubmitEvent) => {
+    e.preventDefault();
+    const state = formStore.getState();
+    alert(JSON.stringify(state));
+  };
+
+  return (
+    <FormProvider store={formStore}>
+      <form onSubmit={handleSubmit}>
+        <MuiInput field={textField} />
+        <MuiCheckbox field={checkboxField} />
+        <Button variant="contained" type="submit">
+          Submit
+        </Button>
+      </form>
+    </FormProvider>
+  );
+}
+```
+
 ## API Reference
 
 ### createForm<Values>(initialValues)
@@ -179,7 +254,7 @@ const emailField = createField<LoginForm>({
 
 ### useField(store, fieldDescriptor)
 
-Hook to manage field state. Each component should use `useField` for only one field:
+Hook to manage field state.
 
 ```ts
 function UsernameInput() {
@@ -206,12 +281,20 @@ updateFieldValue(store, usernameField, "john");
 
 Create a context provider for reusable field components:
 
-```ts
+```tsx
 const { FormProvider, useFormContext } = createFormContext<LoginForm>();
 
 function ReusableInput() {
   const store = useFormContext();
   // Use store in reusable components
+}
+
+function Form() {
+  return (
+    <FormProvider store={formStore}>
+      <ReusableInput />
+    </FormProvider>
+  );
 }
 ```
 
