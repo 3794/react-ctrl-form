@@ -1,4 +1,4 @@
-import React, { useId } from "react";
+import React, { ComponentProps, useId } from "react";
 import {
   createForm,
   createField,
@@ -55,15 +55,11 @@ const passwordField = createField<ValidationFormValues>({
   validate: passwordValidation,
 });
 
-function EmailInput({
-  field,
-  label,
-  placeholder,
-}: {
+type Props = ComponentProps<"input"> & {
   field: FieldDescriptor<string>;
   label: string;
-  placeholder?: string;
-}) {
+};
+function TextInput({ field, label, ...props }: Props) {
   const id = useId();
   const { value, error, setValue } = useField(store, field);
 
@@ -72,39 +68,10 @@ function EmailInput({
       <label htmlFor={id}>{label}</label>
       <input
         id={id}
-        type="email"
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        placeholder={placeholder}
         className={`form-input ${error ? "error" : ""}`}
-      />
-      {error && <div className="error-message">{error}</div>}
-    </div>
-  );
-}
-
-function PasswordInput({
-  field,
-  label,
-  placeholder,
-}: {
-  field: FieldDescriptor<string>;
-  label: string;
-  placeholder?: string;
-}) {
-  const id = useId();
-  const { value, error, setValue } = useField(store, field);
-
-  return (
-    <div className="form-group">
-      <label htmlFor={id}>{label}</label>
-      <input
-        id={id}
-        type="password"
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        placeholder={placeholder}
-        className={`form-input ${error ? "error" : ""}`}
+        {...props}
       />
       {error && <div className="error-message">{error}</div>}
     </div>
@@ -155,12 +122,14 @@ export function ValidationTab() {
     <div>
       <p>Field validation happens automatically as you type</p>
 
-      <EmailInput
+      <TextInput
+        type="text"
         field={emailField}
         label="Email (with async validation)"
         placeholder="Enter email"
       />
-      <PasswordInput
+      <TextInput
+        type="password"
         field={passwordField}
         label="Password"
         placeholder="Enter password"

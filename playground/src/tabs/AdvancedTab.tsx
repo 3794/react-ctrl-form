@@ -1,4 +1,4 @@
-import { useId } from "react";
+import { ComponentProps, useId } from "react";
 import {
   createForm,
   createField,
@@ -33,42 +33,12 @@ const ageField = createField<AdvancedFormValues>({
   select: (state) => state.age,
 });
 
-function TextInput({
-  field,
-  label,
-  placeholder,
-}: {
-  label: string;
-  field: FieldDescriptor<string>;
-  placeholder?: string;
-}) {
-  const id = useId();
-  const { value, setValue } = useField(store, field);
-
-  return (
-    <div className="form-group">
-      <label htmlFor={id}>{label}</label>
-      <input
-        id={id}
-        type="text"
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        placeholder={placeholder}
-        className="form-input"
-      />
-    </div>
-  );
-}
-
-function EmailInput({
-  field,
-  label,
-  placeholder,
-}: {
+type Props = ComponentProps<"input"> & {
   field: FieldDescriptor<string>;
   label: string;
-  placeholder?: string;
-}) {
+};
+
+function TextInput({ field, label, ...props }: Props) {
   const id = useId();
   const { value, setValue, error } = useField(store, field);
 
@@ -80,37 +50,10 @@ function EmailInput({
         type="email"
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        placeholder={placeholder}
         className="form-input"
+        {...props}
       />
       {error && <div className="error-message">{error}</div>}
-    </div>
-  );
-}
-
-function NumberInput({
-  field,
-  label,
-  placeholder,
-}: {
-  field: FieldDescriptor<string>;
-  label: string;
-  placeholder?: string;
-}) {
-  const id = useId();
-  const { value, setValue } = useField(store, field);
-
-  return (
-    <div className="form-group">
-      <label htmlFor={id}>{label}</label>
-      <input
-        id={id}
-        type="number"
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        placeholder={placeholder}
-        className="form-input"
-      />
     </div>
   );
 }
@@ -141,9 +84,24 @@ export function AdvancedTab() {
 
   return (
     <div>
-      <TextInput field={nameField} label="name" placeholder="Enter name" />
-      <EmailInput field={emailField} label="email" placeholder="Enter email" />
-      <NumberInput field={ageField} label="age" placeholder="Enter age" />
+      <TextInput
+        type="text"
+        field={nameField}
+        label="name"
+        placeholder="Enter name"
+      />
+      <TextInput
+        type="email"
+        field={emailField}
+        label="email"
+        placeholder="Enter email"
+      />
+      <TextInput
+        type="number"
+        field={ageField}
+        label="age"
+        placeholder="Enter age"
+      />
 
       <div className="button-group">
         <button onClick={handleSetValue} className="button-secondary">

@@ -1,4 +1,4 @@
-import { useId } from "react";
+import { ComponentProps, useId } from "react";
 import {
   createFormContext,
   createForm,
@@ -29,15 +29,12 @@ const emailField = createField<ContextFormValues>({
   validate: emailValidation,
 });
 
-function EmailInput({
-  field,
-  label,
-  placeholder,
-}: {
+type Props = ComponentProps<"input"> & {
   field: FieldDescriptor<string>;
   label: string;
-  placeholder?: string;
-}) {
+};
+
+function TextInput({ field, label, ...props }: Props) {
   const id = useId();
   const store = useFormContext();
   const { value, error, setValue } = useField(store, field);
@@ -50,8 +47,8 @@ function EmailInput({
         type="email"
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        placeholder={placeholder}
         className="form-input"
+        {...props}
       />
       {error && <div className="error-message">{error}</div>}
     </div>
@@ -68,7 +65,8 @@ export function ContextTab() {
 
       <h3>Form 1</h3>
       <FormProvider store={store1}>
-        <EmailInput
+        <TextInput
+          type="text"
           field={emailField}
           label="Email"
           placeholder="Enter email"
@@ -77,7 +75,8 @@ export function ContextTab() {
 
       <h3>Form 2</h3>
       <FormProvider store={store2}>
-        <EmailInput
+        <TextInput
+          type="password"
           field={emailField}
           label="Email"
           placeholder="Enter email"
